@@ -13,6 +13,7 @@ import kz.kff.presentation.http.permission.PermissionController
 import kz.kff.presentation.http.role.RoleController
 import kz.kff.presentation.http.role_permission.RolePermissionController
 import kz.kff.presentation.http.shared.HomeController
+import kz.kff.presentation.http.user.UserController
 import java.nio.file.Paths
 
 fun Application.configureRouting(envConfig: AppEnvironmentConfig, swaggerConfig: SwaggerConfig,storageConfig: StorageConfig) {
@@ -32,6 +33,8 @@ fun Application.configureRouting(envConfig: AppEnvironmentConfig, swaggerConfig:
         RolePermissionController.register(this)
         //File Controller
         FileController().register(this)
+        //User Controller
+        UserController().register(this)
 
         //Access to Storage Config
         if(storageConfig.useStorage){

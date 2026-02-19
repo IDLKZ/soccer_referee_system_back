@@ -13,6 +13,11 @@ class LocalizedMessageConstraints {
         const val ValidationFieldRequiredMessage:String = "validation.field_required"
         const val ValidationFieldMaxSizeMessage:String = "validation.max_size"
         const val ValidationUniqueValueExistMessage:String = "validation.value_exist"
+        const val ValidationUniqueEmailExistMessage:String = "validation.email_exist"
+        const val ValidationUniquePhoneExistMessage:String = "validation.phone_exist"
+        const val ValidationUniqueUsernameExistMessage:String = "validation.username_exist"
+        const val ValidationPasswordPatternMessage:String = "validation.password_pattern"
+        const val ValidationLoginPatternMessage:String = "validation.login_pattern"
 
         const val RequestInvalidIdErrorMessage: String = "request.invalid_id_in_request"
         const val RequestInvalidIdsErrorMessage: String = "request.invalid_ids_in_request"
@@ -25,6 +30,9 @@ class LocalizedMessageConstraints {
 
         //RolePermission
         const val RolePermissionNotFoundMessage: String = "permission.role_permission_not_found"
+
+        //User
+        const val UserNotFoundMessage: String = "user.user_not_found"
 
         const val ValidationLongMaxSizeExceed:String = "max_size.exceeded"
         const val ErrorFileUpload:String = "error.file_upload"

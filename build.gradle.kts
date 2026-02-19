@@ -29,6 +29,7 @@ val redisVersion = "5.2.0"
 val micrometerVersion = "1.14.1"
 val opentelemetryVersion = "1.44.1"
 val HickariCpVersion = "7.0.2"
+val jwtVersion = "0.13.0"
 
 dependencies {
     // Ktor Core
@@ -112,6 +113,13 @@ dependencies {
     implementation("io.insert-koin:koin-core:$koinVersion")
     implementation("io.insert-koin:koin-ktor:$koinVersion")
     implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
+
+    //JWT
+    implementation("io.jsonwebtoken:jjwt-api:$jwtVersion")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:$jwtVersion")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
+    implementation("io.ktor:ktor-server-auth")
+    implementation("io.ktor:ktor-server-auth-jwt")
 
     // Logging
     implementation("ch.qos.logback:logback-classic:$logbackVersion")

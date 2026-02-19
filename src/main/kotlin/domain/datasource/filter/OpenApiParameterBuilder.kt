@@ -1,7 +1,10 @@
 package kz.kff.domain.datasource.filter
 
+import io.github.smiley4.ktoropenapi.config.MultipartBodyConfig
+import io.github.smiley4.ktoropenapi.config.MultipartPartConfig
 import io.github.smiley4.ktoropenapi.config.RequestConfig
 import io.github.smiley4.ktoropenapi.config.ResponsesConfig
+import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import kz.kff.core.shared.utils.api_response.ApiCommonResponse
@@ -13,11 +16,13 @@ import kotlin.reflect.full.primaryConstructor
 
 object ApiParams {
     const val ID = "id"
+    const val IDS = "ids"
     const val SHOW_DELETED = "showDeleted"
     const val INCLUDE_JOIN = "includeJoin"
     const val HARD_DELETE = "hardDelete"
     const val SKIP_IF_FILE_NOT_VALIDATE = "skipIfNotValidate"
     const val FOLDER = "folder"
+    const val DELETE_OLD_FILE = "deleteOldFile"
 }
 
 fun <F : Any> RequestConfig.fromFilter(filterClass: KClass<F>) {
@@ -155,19 +160,20 @@ fun RequestConfig.withLocaleHeader() {
     }
 }
 
-fun <D : Any> RequestConfig.fromFormField(dtoClass: KClass<D>) {
+fun <D : Any> RequestConfig.fromFormField(
+    dtoClass: KClass<D>,
+    block: MultipartBodyConfig.() -> Unit = {}
+) {
     multipartBody {
         mediaTypes(ContentType.MultiPart.FormData)
 
         val ctor = dtoClass.primaryConstructor
             ?: error("DTO must have primary constructor")
-
         ctor.parameters.forEach { param ->
             val name = param.name ?: return@forEach
             val type = param.type
             val classifier = type.classifier
             val required = !param.isOptional && !type.isMarkedNullable
-
             when (classifier) {
                 String::class  -> part<String>(name)  { this.required = required }
                 Int::class     -> part<Int>(name)     { this.required = required }
@@ -186,13 +192,13 @@ fun <D : Any> RequestConfig.fromFormField(dtoClass: KClass<D>) {
                 else -> {
                     val kClass = classifier as? KClass<*>
                     if (kClass?.java?.isEnum == true) {
-                        part<String>(name) {
-                            this.required = required
-                        }
+                        part<String>(name) { this.required = required }
                     }
                 }
             }
         }
+
+        block()
     }
 }
 
@@ -201,21 +207,45 @@ fun RequestConfig.uploadFile() {
     queryParameter<String?>(ApiParams.FOLDER) { description = "Upload folder"; required = false }
 }
 
-fun RequestConfig.oneFileUpload(){
-    multipartBody {
-        mediaTypes(ContentType.MultiPart.FormData)
-        part<File>("file") {
-            mediaTypes(ContentType.Application.OctetStream)
-        }
+fun RequestConfig.updateFileParams() {
+    pathParameter<Long>(ApiParams.ID) {
+        description = "ID"
+    }
+    queryParameter<Boolean>(ApiParams.SKIP_IF_FILE_NOT_VALIDATE) { description = "Skip if file not valid"; required = false }
+    queryParameter<Boolean>(ApiParams.DELETE_OLD_FILE) { description = "Delete old file"; required = false }
+    queryParameter<String?>(ApiParams.FOLDER) { description = "Upload folder"; required = false }
+}
+
+fun RequestConfig.deleteFileParams() {
+    pathParameter<Long>(ApiParams.ID) {
+        description = "ID"
+    }
+    queryParameter<Boolean>(ApiParams.DELETE_OLD_FILE) { description = "Delete old file"; required = false }
+}
+
+fun MultipartBodyConfig.uploadOneFilePart(name: String = "file") {
+    part<File>(name) {
+        mediaTypes(ContentType.Application.OctetStream)
     }
 }
 
-fun RequestConfig.listFileUpload(){
+fun MultipartBodyConfig.uploadMultipleFilesPart(name: String = "files") {
+    part<List<File>>(name) {
+        mediaTypes(ContentType.Application.OctetStream)
+    }
+}
+
+fun RequestConfig.oneFileUpload() {
     multipartBody {
         mediaTypes(ContentType.MultiPart.FormData)
-        part<List<File>>("files") {
-            mediaTypes(ContentType.Application.OctetStream)
-        }
+        uploadOneFilePart()
+    }
+}
+
+fun RequestConfig.listFileUpload() {
+    multipartBody {
+        mediaTypes(ContentType.MultiPart.FormData)
+        uploadMultipleFilesPart()
     }
 }
 

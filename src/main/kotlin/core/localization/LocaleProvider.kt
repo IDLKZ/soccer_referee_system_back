@@ -41,6 +41,6 @@ object LocaleProvider {
     fun getMessage(key: String?, locale: SupportedLocale, vararg args: Any): String {
         if (key == null) return ""
         val template = getMessage(key, locale)
-        return template.format(*args)
+        return if (args.isEmpty()) template else template.format(*args)
     }
 }

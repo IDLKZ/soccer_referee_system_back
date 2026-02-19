@@ -26,11 +26,13 @@ class ApiRouteConstraints {
         const val API_PERMISSIONS = "/permissions"
         const val API_ROLE_PERMISSIONS = "/role-permissions"
         const val API_FILE = "/file"
+        const val API_USERS = "/users"
 
         const val ROLE_TAG = "Roles-Роли"
         const val PERMISSION_TAG = "Permission-Разрешения"
         const val ROLE_PERMISSION_TAG = "Role-Permission-Роли-Разрешения"
         const val FILE_TAG = "File-Файловый сервис"
+        const val USER_TAG = "Users-Пользователи"
 
 
         fun getIdFromParameter(parameters: Parameters,idName:String = "id"):Long{
@@ -63,6 +65,10 @@ class ApiRouteConstraints {
 
         fun getFolderParameter(parameters: Parameters,parameterName:String = "folder"): String?{
             return  parameters[parameterName]?.toString()
+        }
+
+        fun getDeleteOldFileParameter(parameters: Parameters, parameterName: String = "deleteOldFile"): Boolean {
+            return parameters[parameterName]?.toBooleanStrictOrNull() ?: false
         }
 
     }
