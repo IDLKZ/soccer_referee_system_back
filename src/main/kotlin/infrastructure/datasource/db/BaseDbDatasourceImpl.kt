@@ -63,11 +63,13 @@ abstract class BaseDbDatasourceImpl<T : LongIdTable>(
         filter: BaseFilter<T>,
         mapper: (ResultRow) -> DTO
     ): DTO? {
-        val query = if (filter.includeJoin) baseJoinQuery() else baseQuery()
-        filter.buildConditions()?.let { query.where { it } }
+        val base = if (filter.includeJoin) baseJoinQuery() else baseQuery()
+        val query = filter.buildConditions()
+            ?.let { base.where { it } }
+            ?: base
         return query
             .orderBy(filter.getOrderColumn() to filter.getOrderDirection())
-            .singleOrNull()
+            .firstOrNull()
             ?.let(mapper)
     }
 

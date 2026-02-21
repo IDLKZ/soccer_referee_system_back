@@ -4,16 +4,19 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import kz.kff.core.config.AppDatabaseConfig
 import kz.kff.core.config.AppFlyWayConfig
+import kz.kff.core.config.JWTConfig
 import kz.kff.core.config.StorageConfig
 import kz.kff.core.di.datasourceModule
 import kz.kff.core.di.initAppDatabaseModule
+import kz.kff.core.di.seederModule
+import kz.kff.core.di.service.authCoreModule
 import kz.kff.core.di.service.storageModule
 import kz.kff.core.di.useCaseModule
 import kz.kff.core.di.validationModule
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
-fun Application.koinModule(dbConfig: AppDatabaseConfig,flyWayConfig: AppFlyWayConfig,storageConfig: StorageConfig) {
+fun Application.koinModule(dbConfig: AppDatabaseConfig,flyWayConfig: AppFlyWayConfig,storageConfig: StorageConfig,jwtConfig: JWTConfig) {
     install(Koin) {
         //Логгирование
         slf4jLogger()
@@ -24,10 +27,14 @@ fun Application.koinModule(dbConfig: AppDatabaseConfig,flyWayConfig: AppFlyWayCo
             datasourceModule,
             //File Service
             storageModule(storageConfig),
+            //Auth
+            authCoreModule(jwtConfig),
             //Use Case
             useCaseModule,
             //Validation
             validationModule,
+            //Seeders
+            seederModule,
         )
     }
 }

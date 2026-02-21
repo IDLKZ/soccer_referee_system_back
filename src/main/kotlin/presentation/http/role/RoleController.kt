@@ -8,8 +8,10 @@ import io.github.smiley4.ktoropenapi.put
 import io.ktor.server.request.receive
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.route
+import kz.kff.core.auth.requirePermission
 import kz.kff.core.db.table.role.RoleTable
 import kz.kff.core.shared.constraints.ApiRouteConstraints
+import kz.kff.core.shared.constraints.DbValueConstraints
 import kz.kff.core.shared.utils.api_response.ApiResponseHelper.success
 import kz.kff.domain.datasource.filter.fromFilter
 import kz.kff.domain.datasource.filter.internalError
@@ -79,26 +81,28 @@ class RoleController : KoinComponent {
                 val pagination = paginateRoleUseCase(filter = filter)
                 call.success(data = pagination)
             }
-
-            //Получить все
-            get(path = ApiRouteConstraints.ALL_API, {
-                tags(ApiRouteConstraints.ROLE_TAG)
-                summary = "Получить все роли"
-                description = "Получить список всех ролей с фильтрацией"
-                request {
-                    withLocaleHeader()
-                    fromFilter(RoleFilter::class)
+            requirePermission(DbValueConstraints.ROLE_INDEX_PERMISSION_VALUE){
+                //Получить все
+                get(path = ApiRouteConstraints.ALL_API, {
+                    tags(ApiRouteConstraints.ROLE_TAG)
+                    summary = "Получить все роли"
+                    description = "Получить список всех ролей с фильтрацией"
+                    request {
+                        withLocaleHeader()
+                        fromFilter(RoleFilter::class)
+                    }
+                    response {
+                        okListWrapped<RoleWithPermissionsDTO>()
+                        internalError()
+                    }
+                }) {
+                    val filter = RoleQueryParameter(filterClass = RoleFilter::class)
+                        .fromParameter(call.parameters, table = RoleTable)
+                    val all = getAllRoleUseCase(filter = filter)
+                    call.success(data = all)
                 }
-                response {
-                    okListWrapped<RoleWithPermissionsDTO>()
-                    internalError()
-                }
-            }) {
-                val filter = RoleQueryParameter(filterClass = RoleFilter::class)
-                    .fromParameter(call.parameters, table = RoleTable)
-                val all = getAllRoleUseCase(filter = filter)
-                call.success(data = all)
             }
+
 
             //Получить по ID
             get(path = ApiRouteConstraints.GET_BY_ID_API, {

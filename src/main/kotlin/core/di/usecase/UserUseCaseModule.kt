@@ -15,9 +15,9 @@ fun Module.queryUserUseCases() {
 }
 
 fun Module.commandUserUseCases() {
-    factory { CreateUserUseCase(get(), get(), get(), get(), get()) }
-    factory { UpdateUserUseCase(get(), get(), get()) }
+    factory { CreateUserUseCase(get(), get(), get(), get(), get(),get()) }
+    factory { UpdateUserUseCase(get(), get(), get(),get()) }
     factory { DeleteUserByIdUseCase(get()) }
     factory { BulkDeleteUserByIdsUseCase(get()) }
-    factory { BulkCreateUserUseCase(get(), get(), get()) }
+    factory { BulkCreateUserUseCase(get(), get(), get(),get()) }
 }

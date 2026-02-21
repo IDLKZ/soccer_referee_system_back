@@ -44,6 +44,14 @@ flyway:
   baselineOnMigrate: true
   validateOnMigrate: true
 
+#Безопасность
+jwt:
+  secret: "91abcf4fa1d28f16f6ea71ab7203241510b4253c6d84ef01cb857d8db93aa4f6"
+  issuer: "soccer_referee_system_back"
+  audience: "soccer_referee_system_front"
+  access_expiration: 720000
+  refresh_expiration: 604800000
+
 # Файловый сервис
 storage:
   useStorage: true

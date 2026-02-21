@@ -10,6 +10,7 @@ import kz.kff.core.shared.constraints.LocalizedMessageConstraints
 import kz.kff.domain.datasource.db.eachRow
 import kz.kff.domain.datasource.db.role.RoleDatasource
 import kz.kff.domain.datasource.db.user.UserDatasource
+import kz.kff.domain.datasource.service.jwt.AppJwtService
 import kz.kff.domain.dto.user.UserCDTO
 import kz.kff.domain.dto.user.UserRDTO
 import kz.kff.domain.mapper.toRoleRDTOList
@@ -21,6 +22,7 @@ class UpdateUserUseCase(
     private val userDatasource: UserDatasource,
     private val roleDatasource: RoleDatasource,
     private val validator: Validator,
+    private val jwtService: AppJwtService,
 ) : UseCaseTransaction() {
 
     suspend operator fun invoke(id: Long, dto: UserCDTO): UserRDTO = tx(
@@ -66,7 +68,7 @@ class UpdateUserUseCase(
                 )
             }
         }
-
+        dto.passwordHash = jwtService.hashPassword(dto.passwordHash)
         userDatasource.update(
             id = id,
             updateBlock = { dto.applyUpdate(UserTable, this) },

@@ -22,17 +22,26 @@ class ApiRouteConstraints {
         const val DELETE_BULK_API = "/bulk/delete"
         const val RESTORE_BULK_API = "/bulk/restore"
 
+        const val SIGN_IN_API = "/sign-in"
+        const val SIGN_UP_API = "/sign-up"
+        const val REFRESH_API = "/refresh"
+        const val GET_ME_API = "/me"
+
         const val API_ROLES = "/roles"
         const val API_PERMISSIONS = "/permissions"
         const val API_ROLE_PERMISSIONS = "/role-permissions"
         const val API_FILE = "/file"
         const val API_USERS = "/users"
+        const val API_AUTH_SESSIONS = "/auth-sessions"
+        const val API_AUTH = "/auth"
 
         const val ROLE_TAG = "Roles-Роли"
         const val PERMISSION_TAG = "Permission-Разрешения"
         const val ROLE_PERMISSION_TAG = "Role-Permission-Роли-Разрешения"
         const val FILE_TAG = "File-Файловый сервис"
         const val USER_TAG = "Users-Пользователи"
+        const val AUTH_SESSION_TAG = "Auth-Sessions-Сессии"
+        const val AUTH_TAG = "Auth-Аутентификация"
 
 
         fun getIdFromParameter(parameters: Parameters,idName:String = "id"):Long{

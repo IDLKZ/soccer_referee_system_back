@@ -14,6 +14,7 @@ import kz.kff.domain.datasource.db.file.FileDatasource
 import kz.kff.domain.datasource.db.role.RoleDatasource
 import kz.kff.domain.datasource.db.user.UserDatasource
 import kz.kff.domain.datasource.service.file.FileService
+import kz.kff.domain.datasource.service.jwt.AppJwtService
 import kz.kff.domain.dto.role.RoleRDTO
 import kz.kff.domain.dto.user.UserCDTO
 import kz.kff.domain.dto.user.UserRDTO
@@ -29,6 +30,7 @@ class CreateUserUseCase(
     private val fileDatasource: FileDatasource,
     private val fileService: FileService,
     private val validator: Validator,
+    private val jwtService: AppJwtService,
 ) : UseCaseTransaction() {
 
     suspend operator fun invoke(
@@ -59,7 +61,7 @@ class CreateUserUseCase(
                     dto.imageId = savedFile.id
                 }
             }
-
+            dto.passwordHash = jwtService.hashPassword(dto.passwordHash)
             userDatasource.create(
                 insertBlock = dto.createEntity(UserTable),
                 mapper = { it.toUserRDTO() }

@@ -7,6 +7,7 @@ import kz.kff.core.shared.constraints.LocalizedMessageConstraints
 import kz.kff.domain.datasource.db.eachRow
 import kz.kff.domain.datasource.db.role.RoleDatasource
 import kz.kff.domain.datasource.db.user.UserDatasource
+import kz.kff.domain.datasource.service.jwt.AppJwtService
 import kz.kff.domain.dto.applyMap
 import kz.kff.domain.dto.user.UserCDTO
 import kz.kff.domain.dto.user.UserRDTO
@@ -19,6 +20,7 @@ class BulkCreateUserUseCase(
     private val userDatasource: UserDatasource,
     private val roleDatasource: RoleDatasource,
     private val validator: Validator,
+    private val jwtService: AppJwtService,
 ) : UseCaseTransaction() {
 
     suspend operator fun invoke(dtos: List<UserCDTO>): List<UserRDTO> {
@@ -59,6 +61,10 @@ class BulkCreateUserUseCase(
                 dto.email.lowercase() in existingEmails ||
                 dto.username.lowercase() in existingUsernames ||
                 (dto.phone != null && dto.phone.lowercase() in existingPhones)
+            }
+
+            dtosToCreate.forEach {
+                it.passwordHash = jwtService.hashPassword(it.passwordHash)
             }
 
             userDatasource.bulkCreate(

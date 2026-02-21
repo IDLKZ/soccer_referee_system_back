@@ -1,15 +1,18 @@
 package kz.kff.core.di
 
+import kz.kff.core.db.table.auth_session.AuthSessionTable
 import kz.kff.core.db.table.file.FileTable
 import kz.kff.core.db.table.permission.PermissionTable
 import kz.kff.core.db.table.role.RoleTable
 import kz.kff.core.db.table.role_permission.RolePermissionTable
 import kz.kff.core.db.table.user.UserTable
+import kz.kff.domain.datasource.db.auth_session.AuthSessionDatasource
 import kz.kff.domain.datasource.db.file.FileDatasource
 import kz.kff.domain.datasource.db.permission.PermissionDatasource
 import kz.kff.domain.datasource.db.role.RoleDatasource
 import kz.kff.domain.datasource.db.role_permission.RolePermissionDatasource
 import kz.kff.domain.datasource.db.user.UserDatasource
+import kz.kff.infrastructure.datasource.db.auth_session.AuthSessionDatasourceImpl
 import kz.kff.infrastructure.datasource.db.file.FileDatasourceImpl
 import kz.kff.infrastructure.datasource.db.permission.PermissionDatasourceImpl
 import kz.kff.infrastructure.datasource.db.role.RoleDatasourceImpl
@@ -23,4 +26,5 @@ val datasourceModule = module {
     single<RolePermissionDatasource> { RolePermissionDatasourceImpl(RolePermissionTable) }
     single<FileDatasource> { FileDatasourceImpl(FileTable) }
     single<UserDatasource> { UserDatasourceImpl(UserTable) }
+    single<AuthSessionDatasource> { AuthSessionDatasourceImpl(AuthSessionTable) }
 }

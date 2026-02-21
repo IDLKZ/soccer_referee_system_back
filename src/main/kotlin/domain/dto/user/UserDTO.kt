@@ -18,6 +18,7 @@ import kz.kff.domain.dto.BaseOneCreateDTO
 import kz.kff.domain.dto.BaseUpdateDTO
 import kz.kff.domain.dto.file.FileRDTO
 import kz.kff.domain.dto.role.RoleSDTO
+import kz.kff.domain.dto.role.RoleWithPermissionsDTO
 
 @Serializable
 data class UserRDTO(
@@ -57,7 +58,7 @@ data class UserWithRelationsDTO(
     val gender: Int? = null,
     val isActive: Boolean,
     val isVerified: Boolean,
-    val role: RoleSDTO? = null,
+    val role: RoleWithPermissionsDTO? = null,
     val image: FileRDTO? = null,
     @Serializable(with = LocalDateTimeIso8601Serializer::class)
     val createdAt: LocalDateTime,
@@ -66,6 +67,69 @@ data class UserWithRelationsDTO(
     @Serializable(with = LocalDateTimeIso8601Serializer::class)
     val deletedAt: LocalDateTime? = null,
 )
+
+@Serializable
+data class UserSecretRDTO(
+    val id: Long,
+    val username: String,
+    val phone: String? = null,
+    val email: String,
+    val firstName: String,
+    val lastName: String,
+    val patronymic: String? = null,
+    val passwordHash: String? = null,
+    @Serializable(with = LocalDateIso8601Serializer::class)
+    val birthDate: LocalDate? = null,
+    val gender: Int? = null,
+    val isActive: Boolean,
+    val isVerified: Boolean,
+    val role: RoleWithPermissionsDTO? = null,
+    val image: FileRDTO? = null,
+    @Serializable(with = LocalDateTimeIso8601Serializer::class)
+    val createdAt: LocalDateTime,
+    @Serializable(with = LocalDateTimeIso8601Serializer::class)
+    val updatedAt: LocalDateTime,
+    @Serializable(with = LocalDateTimeIso8601Serializer::class)
+    val deletedAt: LocalDateTime? = null,
+) {
+    fun toUserRDTO() = UserRDTO(
+        id = id,
+        roleId = role?.id,
+        imageId = image?.id,
+        username = username,
+        phone = phone,
+        email = email,
+        firstName = firstName,
+        lastName = lastName,
+        patronymic = patronymic,
+        birthDate = birthDate,
+        gender = gender,
+        isActive = isActive,
+        isVerified = isVerified,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt,
+    )
+
+    fun toUserWithRelationsDTO() = UserWithRelationsDTO(
+        id = id,
+        username = username,
+        phone = phone,
+        email = email,
+        firstName = firstName,
+        lastName = lastName,
+        patronymic = patronymic,
+        birthDate = birthDate,
+        gender = gender,
+        isActive = isActive,
+        isVerified = isVerified,
+        role = role,
+        image = image,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt,
+    )
+}
 
 @Serializable
 data class UserSDTO(

@@ -34,8 +34,15 @@ class LocalizedMessageConstraints {
         //User
         const val UserNotFoundMessage: String = "user.user_not_found"
 
+        //AuthSession
+        const val AuthSessionNotFoundMessage: String = "auth_session.not_found"
+
         const val ValidationLongMaxSizeExceed:String = "max_size.exceeded"
         const val ErrorFileUpload:String = "error.file_upload"
         const val FileNameRequiredFileUpload:String = "error.file_name_required"
+
+        //Auth
+        const val LoginUserNotFoundMessage: String = "auth.user_not_found"
+        const val PasswordNotVerifiedMessage: String = "auth.password_not_verified"
     }
 }

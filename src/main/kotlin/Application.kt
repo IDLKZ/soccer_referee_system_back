@@ -16,12 +16,16 @@ import io.github.smiley4.ktoropenapi.OpenApi
 import io.github.smiley4.ktoropenapi.config.SchemaGenerator
 import io.github.smiley4.ktoropenapi.config.SchemaOverwriteModule
 import io.swagger.v3.oas.models.media.Schema
+import kotlinx.coroutines.launch
+import kz.kff.core.auth.configureJwtAuth
+import kz.kff.core.config.JWTConfig
 import kz.kff.core.config.StorageConfig
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 import kz.kff.core.config.SwaggerConfig
 import kz.kff.core.di.application.configureSwaggerLocal
 import kz.kff.core.di.application.koinModule
+import kz.kff.infrastructure.datasource.seeder.SeederRunner
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -34,6 +38,7 @@ fun Application.module() {
     val flywayConfig = AppFlyWayConfig.configure(environment.config)
     val swaggerConfig = SwaggerConfig.configure(environment.config)
     val storageConfig = StorageConfig.configure(environment.config)
+    val jwtConfig = JWTConfig.configure(environment.config)
     //OpenAPI & Swagger
     if (swaggerConfig.enabled) {
        configureSwaggerLocal(swaggerConfig)
@@ -46,8 +51,14 @@ fun Application.module() {
     configureApiExceptionHandler(envConfig)
     //Единождый запуск миграций
     FlywayMigration.run(dbConfig=dbConfig, flywayConfig=flywayConfig)
+    //JWT Auth Middleware
+    configureJwtAuth(jwtConfig)
     //Koin DI - Repository, UseCase, DB Transactions
-    koinModule(dbConfig,flywayConfig,storageConfig)
+    koinModule(dbConfig,flywayConfig,storageConfig,jwtConfig)
+    //Сидеры
+    launch {
+        SeederRunner.run(envConfig.environment)
+    }
     //Роутизация
     configureRouting(envConfig,swaggerConfig,storageConfig)
     monitor.subscribe(ApplicationStopped) {

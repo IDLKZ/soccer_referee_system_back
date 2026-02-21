@@ -8,6 +8,8 @@ import io.ktor.server.routing.*
 import kz.kff.core.config.AppEnvironmentConfig
 import kz.kff.core.config.StorageConfig
 import kz.kff.core.config.SwaggerConfig
+import kz.kff.presentation.http.auth.AuthController
+import kz.kff.presentation.http.auth_session.AuthSessionController
 import kz.kff.presentation.http.file.FileController
 import kz.kff.presentation.http.permission.PermissionController
 import kz.kff.presentation.http.role.RoleController
@@ -35,6 +37,10 @@ fun Application.configureRouting(envConfig: AppEnvironmentConfig, swaggerConfig:
         FileController().register(this)
         //User Controller
         UserController().register(this)
+        //Auth Session Controller
+        AuthSessionController().register(this)
+        //Auth Controller
+        AuthController().register(this)
 
         //Access to Storage Config
         if(storageConfig.useStorage){

@@ -1,7 +1,6 @@
 package kz.kff.core.db.table.file
 
 import kz.kff.core.db.table.BasicLongTable
-import kz.kff.core.shared.constraints.DataConstraints
 import org.jetbrains.exposed.v1.core.Column
 
 object FileTable : BasicLongTable("files") {

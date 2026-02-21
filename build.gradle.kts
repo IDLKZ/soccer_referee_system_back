@@ -31,6 +31,8 @@ val opentelemetryVersion = "1.44.1"
 val HickariCpVersion = "7.0.2"
 val jwtVersion = "0.13.0"
 
+val GeoIpVersion = "5.0.2"
+
 dependencies {
     // Ktor Core
     implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
@@ -120,6 +122,10 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
     implementation("io.ktor:ktor-server-auth")
     implementation("io.ktor:ktor-server-auth-jwt")
+    implementation("org.mindrot:jbcrypt:0.4")
+    //Geo Ip
+    implementation("com.maxmind.geoip2:geoip2:$GeoIpVersion")
+    implementation("com.github.ua-parser:uap-java:1.6.1")
 
     // Logging
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
